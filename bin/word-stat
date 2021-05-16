@@ -11,8 +11,8 @@ stat the word under <path>, output the result like:
 
 NOTE:
 Best practise is: word-stat <path> > /tmp/tmp.file
-Because write the text one by one, that is a big cost.
-I make a test, it is: 3.7s vs 10.8s
+Because write the text to console one by one, that is a big cost.
+I make a test, it is: 3.7s vs 9.7s
 "
 }
 
@@ -32,16 +32,16 @@ fi
 grep -rh -o "\w*" "$path" |\
  sort |\
  awk '
-  BEGIN { last=""; time=0 }
+  BEGIN { last=""; time=0; result="" }
 
   {
     if(last != $0){
-      if (time > 0) print time" "last;
+      if (time > 0) result=result time" "last"\n";
       time=0;
     }
     last = $0;
     time = time + 1;
   }
 
-  END { if (time > 0) print time" "last; }
+  END { if (time > 0) result=result time" "last"\n"; print result; }
   '
